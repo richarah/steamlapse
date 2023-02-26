@@ -5,6 +5,7 @@ import os
 import re
 
 import tkinter as tk
+import webbrowser
 from tkinter import filedialog
 from datetime import datetime
 from typing import List
@@ -86,8 +87,11 @@ def generate_timeline(num_intervals=96):
 
 # Graphics - colours
 
-def dim_rgb(r, g, b, brightness=0.8)
-    return int(r*brightness), int(g*brightness), int(b*brightness)
+def dim_rgb(rgb, brightness=0.67):
+    r = rgb[0]
+    g = rgb[1]
+    b = rgb[2]
+    return round(r*brightness), round(g*brightness), round(b*brightness)
 
 def string_to_rgb(s):
     # Hash the input string using SHA-256
@@ -176,21 +180,30 @@ def draw_squares(lists_of_strings: List[List[str]]):
 
 
 # CSS
-def generate_css() -> str:
+def generate_css(row_length=24) -> str:
+
+    # Set minimum size of a square in pixels.
+    # Also a scaling factor in vw, so it won't be overrun in case of too many intervals
+    scale = (32 / row_length)
+    min_size=12
+
     # Define constants for the size and spacing of the squares
-    SQUARE_SIZE = 32
-    SQUARE_SPACING = 8
-    SQUARE_PADDING = 64
+    SQUARE_SIZE = f'max({min_size}px, {scale}vw)'
+    SQUARE_SPACING = f'max({min_size // 4}px, {scale / 4}vw)'
+    SQUARE_PADDING = f'max({min_size}px, {scale / 4}vw)'
     
-    # Outline
-    OUTLINE_WIDTH = 4
-    OUTLINE_RADIUS = 8
+    # Outline. Must be min 2px for graphics to render as intended
+    OUTLINE_WIDTH = f'max(2px, {min_size // 8}px, {scale / 8}vw)'
+    OUTLINE_RADIUS = f'max(2px, {min_size // 8}px, {scale / 8}vw)'
     
     # Start the CSS string with the opening <style> tag
     css = '<style>\n'
+    
+    # Wrapper div. Center the chart
+    css += f'.wrapper {{ white-space: nowrap; text-align: center; }}\n'
 
     # Add the CSS styles for the squares
-    css += f'.square {{ border-style: solid; width: {SQUARE_SIZE}px; height: {SQUARE_SIZE}px; border-radius: {OUTLINE_RADIUS}px; border-width: {OUTLINE_WIDTH}px; margin: {SQUARE_SPACING/2}px; padding: 0; display: inline-block; }}\n'
+    css += f'.square {{ border-style: solid; width: {SQUARE_SIZE}; height: {SQUARE_SIZE}; border-radius: {OUTLINE_RADIUS}; border-width: {OUTLINE_WIDTH}; margin: {SQUARE_SPACING}; padding: 0; display: inline-block; }}\n'
     css += f'.offline {{ border-color: rgb(192, 192, 192); }}\n'
     css += f'.online {{ border-color: rgb(30, 144, 255); }}\n'
     css += f'.error {{ border-color: rgb(255, 128, 128); }}\n'
@@ -203,22 +216,12 @@ def generate_css() -> str:
 
 # Return a html string
 def generate_html(lists_of_strings: List[List[str]]) -> str:
-    # Define constants for the size and spacing of the squares
-    SQUARE_SIZE = 32
-    SQUARE_SPACING = 8
-    SQUARE_PADDING = 64
 
-    # Determine the dimensions of the image
-    num_rows = len(lists_of_strings)
-    num_cols = max(len(lst) for lst in lists_of_strings)
-    img_width = num_cols * (SQUARE_SIZE + SQUARE_SPACING) - SQUARE_SPACING + SQUARE_PADDING*2
-    img_height = num_rows * (SQUARE_SIZE + SQUARE_SPACING) - SQUARE_SPACING + SQUARE_PADDING*2
-    
     # Generate internal stylesheet
-    css = generate_css()
+    css = generate_css(len(lists_of_strings[0]))
     
     # Start the HTML string
-    html = f'<html><head><meta name="viewport" content="width=device-width, initial-scale=1">{css}</head><body>'
+    html = f'<html><head><meta name="viewport" content="width=device-width, initial-scale=1">{css}</head><body><div class="wrapper">'
 
     # Loop over the lists of strings and add the squares to the HTML string
     for row_idx, lst in enumerate(lists_of_strings):
@@ -234,11 +237,16 @@ def generate_html(lists_of_strings: List[List[str]]) -> str:
                 html += f'<div class="online square"></div>'
             else:
                 # Convert the string to a color using the string_to_color function
-                rgb = string_to_rgb(s)
-                html += f'<div class="square" style="background-color: rgb{rgb}; border-color: rgb{rgb};"></div>'
+                # Also use a slightly dimmer tone for the outline
+                rgb_fill = string_to_rgb(s)
+                rgb_outline = dim_rgb(rgb_fill)
+                html += f'<div class="square" style="background-color: rgb{rgb_fill}; border-color: rgb{rgb_outline};"></div>'
 
         # Add a line break between rows
         html += f'<br>'
+        
+    # End HTML wrapper div
+    html += "</div>"
 
     # Finish the HTML string
     html += f'</body></html>'
@@ -304,3 +312,17 @@ def id_from_path(filename):
         return match.group(2)
     else:
         return None
+        
+# Debug
+
+def display_html_in_browser(html_string: str):
+    # Write the HTML string to a file
+    with open('tmp.html', 'w') as f:
+        f.write(html_string)
+
+        # Open the file in a web browser
+        webbrowser.open('file://' + os.path.abspath(f.name))
+
+        # Remove the file
+        f.close()
+
