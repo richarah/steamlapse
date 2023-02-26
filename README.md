@@ -8,7 +8,7 @@ Originally created as a practical joke for PVV NTNU.
 
 #### What is this?
 
-Steamlapse is a Python project for visualising Steam activity data, creating a GitHub-like timelaps of user activity (read: procrastination).
+Steamlapse is a Python project for visualising Steam activity data, creating a GitHub-like timelapse of user activity (read: procrastination).
 
 ## Prerequisites
 
