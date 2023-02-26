@@ -16,16 +16,16 @@ def main():
                 if valid_steam_id(steam_id):
                     player_data = get_player_data(steam_id, api_key)
                     append_csv_entry(csv_file, player_data)
-                    print("Entry appended to " + csv_file + ". Sleeping for 300 seconds.")
-                    time.sleep(300)
+                    print("Entry appended to " + csv_file + ". Sleeping for 60 seconds.")
+                    time.sleep(60)
                 else:
                     print("ID", steam_id, "invalid")
         except Exception as inst:
             print(type(inst))
             print(inst.args)
             print(inst)
-            print("Retrying in 300 seconds.")
-            time.sleep(300)
+            print("Retrying in 60 seconds.")
+            time.sleep(0)
             
 if __name__ == '__main__':
     main()
