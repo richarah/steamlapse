@@ -1,4 +1,7 @@
-tmp.html
+chart.html
 .env
 __pycache__
 data/*
+html/*
+!data
+!html
