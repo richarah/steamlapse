@@ -13,7 +13,18 @@ import hashlib
 import random
 from PIL import Image, ImageDraw
 
-# WIP - interval adjustment
+# Web
+
+def create_html(html_string, html_path='chart.html'):
+    with open(html_path, 'w') as f:
+        f.write(html_string)
+        return f
+
+def display_html_in_browser(html_string: str):
+    f = create_html(html_string, "chart.html")
+    # Open the file in a web browser
+    webbrowser.open('file://' + os.path.abspath(f.name))
+
 
 # Timeline
 
@@ -326,17 +337,3 @@ def id_from_path(filename):
         return match.group(2)
     else:
         return None
-        
-# Debug
-
-def display_html_in_browser(html_string: str):
-    # Write the HTML string to a file
-    with open('tmp.html', 'w') as f:
-        f.write(html_string)
-
-        # Open the file in a web browser
-        webbrowser.open('file://' + os.path.abspath(f.name))
-
-        # Remove the file
-        f.close()
-
