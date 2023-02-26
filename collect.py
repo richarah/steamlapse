@@ -25,7 +25,7 @@ def main():
             print(inst.args)
             print(inst)
             print("Retrying in 60 seconds.")
-            time.sleep(0)
+            time.sleep(60)
             
 if __name__ == '__main__':
     main()
