@@ -12,6 +12,7 @@ import hashlib
 import random
 from PIL import Image, ImageDraw
 
+# WIP - interval adjustment
 
 # Timeline
 
@@ -21,7 +22,9 @@ def get_unique_strings(lists_of_strings):
         unique_strings.update(lst)
     return unique_strings
 
-def generate_timeline():
+
+def generate_timeline(num_intervals=96):
+
     root = tk.Tk()
     root.withdraw()
 
@@ -38,10 +41,11 @@ def generate_timeline():
             timestamp_dt = datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
             day = timestamp_dt.date()
             if day not in intervals_by_day:
-                intervals_by_day[day] = [None] * 96
+                intervals_by_day[day] = [None] * num_intervals
             hour, minute, second = timestamp_dt.time().hour, timestamp_dt.time().minute, timestamp_dt.time().second
-            interval = hour * 4 + minute // 15
-            if 0 <= interval < 96:
+            interval_length = 1440 // num_intervals
+            interval = hour * 60 // interval_length + minute // interval_length
+            if 0 <= interval < num_intervals:
                 if intervals_by_day[day][interval] is None:
                     intervals_by_day[day][interval] = {}
                 if game_name.lower() == "<online>" or game_name.lower() == "<offline>":
@@ -58,11 +62,11 @@ def generate_timeline():
     for day, intervals in sorted(intervals_by_day.items()):
         if current_day is None:
             current_day = day
-            current_day_intervals = [None] * 96
+            current_day_intervals = [None] * num_intervals
         elif current_day != day:
             max_games_by_day.append(current_day_intervals)
             current_day = day
-            current_day_intervals = [None] * 96
+            current_day_intervals = [None] * num_intervals
 
         for i, game_counts in enumerate(intervals):
             if game_counts is None:
@@ -78,7 +82,6 @@ def generate_timeline():
         max_games_by_day.append(current_day_intervals)
 
     return max_games_by_day
-
 
 # Graphics
 

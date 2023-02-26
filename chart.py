@@ -8,4 +8,8 @@ from modules import *
 #]
 #draw_squares(lists_of_strings)
 
-draw_squares(generate_timeline())
+def get_intervals(default=24):
+    user_input = input ("Intervals (default " + str(default) + "): ") or default
+    return int(user_input)
+
+draw_squares(generate_timeline(get_intervals()))
