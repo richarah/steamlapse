@@ -7,7 +7,7 @@ import re
 import tkinter as tk
 import webbrowser
 from tkinter import filedialog
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List
 import hashlib
 import random
@@ -24,7 +24,7 @@ def get_unique_strings(lists_of_strings):
     return unique_strings
 
 
-def generate_timeline(num_intervals=24):
+def generate_timeline(num_intervals=96):
 
     root = tk.Tk()
     root.withdraw()
@@ -33,6 +33,7 @@ def generate_timeline(num_intervals=24):
 
     intervals_by_day = {}
 
+    # read CSV and fill intervals_by_day dictionary
     with open(file_path, 'r') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for row in csv_reader:
@@ -57,6 +58,16 @@ def generate_timeline(num_intervals=24):
                     else:
                         intervals_by_day[day][interval][game_name] = [timestamp]
 
+    # fill in missing days with <offline> values
+    earliest_day = min(intervals_by_day.keys())
+    latest_day = max(intervals_by_day.keys())
+    for day in sorted((earliest_day + timedelta(days=i) for i in range((latest_day - earliest_day).days + 1))):
+        if day not in intervals_by_day:
+            intervals_by_day[day] = [None] * num_intervals
+            for i in range(num_intervals):
+                intervals_by_day[day][i] = "<offline>"
+
+    # compute max game played for each interval in each day
     max_games_by_day = []
     current_day = None
     current_day_intervals = None
@@ -70,7 +81,7 @@ def generate_timeline(num_intervals=24):
             current_day_intervals = [None] * num_intervals
 
         for i, game_counts in enumerate(intervals):
-            if game_counts is None:
+            if not isinstance(game_counts, dict):
                 current_day_intervals[i] = None
             else:
                 if "<online>" in game_counts and "<offline>" in game_counts:
