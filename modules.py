@@ -166,6 +166,74 @@ def draw_squares(lists_of_strings: List[List[str]]):
     img.show()
 
 
+# CSS
+def generate_css() -> str:
+    # Define constants for the size and spacing of the squares
+    SQUARE_SIZE = 32
+    SQUARE_SPACING = 8
+    SQUARE_PADDING = 64
+    
+    # Outline
+    OUTLINE_WIDTH = 4
+    OUTLINE_RADIUS = 8
+    
+    # Start the CSS string with the opening <style> tag
+    css = '<style>\n'
+
+    # Add the CSS styles for the squares
+    css += f'.square {{ width: {SQUARE_SIZE}px; height: {SQUARE_SIZE}px; border-radius: {OUTLINE_RADIUS}px; border-width: {OUTLINE_WIDTH}px; margin: {SQUARE_SPACING/2}px; padding: 0; display: inline-block; }}\n'
+    css += f'.offline {{ border-style: solid; border-color: rgb(192, 192, 192); }}\n'
+    css += f'.online {{ border-style: solid; border-color: rgb(30, 144, 255); }}\n'
+    css += f'.error {{ border-style: solid; border-color: rgb(255, 128, 128); }}\n'
+
+    # Finish the CSS string with the closing </style> tag
+    css += '</style>\n'
+    
+    return css
+
+
+# Return a html string
+def draw_squares_html(lists_of_strings: List[List[str]]) -> str:
+    # Define constants for the size and spacing of the squares
+    SQUARE_SIZE = 32
+    SQUARE_SPACING = 8
+    SQUARE_PADDING = 64
+    
+    # Determine the dimensions of the image
+    num_rows = len(lists_of_strings)
+    num_cols = max(len(lst) for lst in lists_of_strings)
+    img_width = num_cols * (SQUARE_SIZE + SQUARE_SPACING) - SQUARE_SPACING + SQUARE_PADDING*2
+    img_height = num_rows * (SQUARE_SIZE + SQUARE_SPACING) - SQUARE_SPACING + SQUARE_PADDING*2
+
+    # Start the HTML string
+    html = f'<html><head><meta name="viewport" content="width=device-width, initial-scale=1">{generate_css()}</head><body>'
+
+    # Loop over the lists of strings and add the squares to the HTML string
+    for row_idx, lst in enumerate(lists_of_strings):
+        for col_idx, s in enumerate(lst):
+            if s is None:
+                # Add a square with a light red outline and no fill
+                html += f'<div class="error square"></div>'
+            elif s == "<offline>":
+                # Add a square with a light gray outline and no fill
+                html += f'<div class="offline square"></div>'
+            elif s == "<online>":
+                # Add a square with a dodger blue outline and no fill
+                html += f'<div class="online square"></div>'
+            else:
+                # Convert the string to a color using the string_to_color function
+                color_code = string_to_color(s)
+                html += f'<div class="square"></div>'
+
+        # Add a line break between rows
+        html += f'<br>'
+
+    # Finish the HTML string
+    html += f'</body></html>'
+    
+    return html
+
+
 # Processing
 
 def valid_steam_id(steam_id):

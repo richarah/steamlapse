@@ -2,7 +2,7 @@
 
 
 
-Originally created as a practical joke for PVV NTNU.
+Originally made as a practical joke for PVV @ NTNU, but ended up growing into something much bigger...
 
 
 
@@ -52,6 +52,8 @@ python add_csv.py
 
 ### chart.py
 
+**Please note:** This may be (mostly) phased out in the future in favour of html_chart.py when the latter is complete and stable.
+
 `chart.py` creates a timelapse of Steam activity for a specified Steam user. To use `chart.py`, navigate to the root directory of the project and run the following command:
 
 ```
@@ -60,6 +62,8 @@ python chart.py
 
 This will prompt for a CSV file, and create a Github-like timelapse of Steam activity for the user linked to that file.
 
-### legend.py
+### html_chart.py
 
-`legend.py` is currently a work in progress. It is intended to display a legend explaining the colors used in the `chart.py` timelapse.
+**Please note: This is a work in progress!**
+
+Similar to `chart.py`, except generates a HTML page (with internal CSS) instead of a PIL image.
