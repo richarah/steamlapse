@@ -20,5 +20,4 @@ def get_intervals(default=24):
     user_input = input ("Intervals (default " + str(default) + "): ") or default
     return int(user_input)
 
-print(generate_css())
-print(draw_squares_html(generate_timeline(get_intervals())))
+print(generate_html(generate_timeline(get_intervals())))
