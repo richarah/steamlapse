@@ -1,8 +1,8 @@
 # steamlapse
 
+Python program pinpointing particular pastimes perpetuating procrastination.
 
-
-Originally made as a practical joke for PVV @ NTNU, but ended up growing into something much bigger...
+Originally made as a practical joke for PVV @ NTNU, but ended up growing into something much bigger.
 
 
 
