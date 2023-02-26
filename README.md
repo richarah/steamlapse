@@ -53,7 +53,7 @@ python add_csv.py
 python chart.py
 ```
 
-This will prompt for a CSV file, create a Github-like timelapse of Steam activity for the user linked to that file.
+This will prompt for a CSV file, and create a Github-like timelapse of Steam activity for the user linked to that file.
 
 ### legend.py
 
