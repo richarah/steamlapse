@@ -26,7 +26,9 @@ There are three main Python scripts in the project:
 
 ### collect.py
 
-`collect.py` collects timestamps and persona states for each CSV file located in the `./data` directory. To use `collect.py`, navigate to the root directory of the project and run the following command:
+`collect.py` collects timestamps and persona states for each CSV file located in the `./data` directory.
+
+To use `collect.py`, navigate to the root directory of the project and run the following command:
 
 ```
 
