@@ -37,7 +37,6 @@ There are three main Python scripts in the project:
 To use `collect.py`, navigate to the root directory of the project and run the following command:
 
 ```
-
 python collect.py
 ```
 
