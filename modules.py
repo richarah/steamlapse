@@ -83,7 +83,13 @@ def generate_timeline(num_intervals=96):
 
     return max_games_by_day
 
+
 # Graphics
+
+def antialias_img(img):
+    upsampled = img.resize((img.width * 2, img.height * 2), resample=Image.NEAREST)
+    return upsampled.resize((img.width // 2, img.height // 2), resample=Image.ANTIALIAS)
+
 
 def string_to_color(s):
     # Hash the input string using SHA-256
@@ -106,9 +112,13 @@ def string_to_color(s):
 
 def draw_squares(lists_of_strings: List[List[str]]):
     # Define constants for the size and spacing of the squares
-    SQUARE_SIZE = 8
-    SQUARE_SPACING = 2
-    SQUARE_PADDING = 16
+    SQUARE_SIZE = 32
+    SQUARE_SPACING = 8
+    SQUARE_PADDING = 64
+    
+    # Outline
+    OUTLINE_WIDTH = 4
+    OUTLINE_RADIUS = 8
 
     # Determine the dimensions of the image
     num_rows = len(lists_of_strings)
@@ -148,8 +158,10 @@ def draw_squares(lists_of_strings: List[List[str]]):
             y1 = y0 + SQUARE_SIZE
 
             # Draw the square
-            draw.rounded_rectangle((x0, y0, x1, y1), fill=fill_color, outline=outline_color, radius=2)
-
+            draw.rounded_rectangle((x0, y0, x1, y1), fill=fill_color, outline=outline_color, radius=OUTLINE_RADIUS, width=OUTLINE_WIDTH)
+            
+    img = antialias_img(img)
+    
     # Display the image
     img.show()
 
