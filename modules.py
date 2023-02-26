@@ -23,8 +23,11 @@ def get_unique_strings(lists_of_strings):
         unique_strings.update(lst)
     return unique_strings
 
+def get_intervals(default=24):
+    user_input = input ("Intervals (default " + str(default) + "): ") or default
+    return int(user_input)
 
-def generate_timeline(num_intervals=96):
+def generate_timeline(num_intervals=get_intervals()):
 
     root = tk.Tk()
     root.withdraw()
@@ -71,7 +74,7 @@ def generate_timeline(num_intervals=96):
     max_games_by_day = []
     current_day = None
     current_day_intervals = None
-    for day, intervals in sorted(intervals_by_day.items()):
+    for day, intervals in sorted(intervals_by_day.items(), reverse=True):
         if current_day is None:
             current_day = day
             current_day_intervals = [None] * num_intervals
@@ -204,8 +207,8 @@ def generate_css(row_length=24) -> str:
     SQUARE_PADDING = f'max({min_size}px, {scale / 4}vw)'
     
     # Outline. Must be min 2px for graphics to render as intended
-    OUTLINE_WIDTH = f'max(2px, {min_size // 8}px, {scale / 8}vw)'
-    OUTLINE_RADIUS = f'max(2px, {min_size // 8}px, {scale / 8}vw)'
+    OUTLINE_WIDTH = f'max(2px, {min_size // 6}px, {scale / 6}vw)'
+    OUTLINE_RADIUS = f'max(2px, {min_size // 6}px, {scale / 6}vw)'
     
     # Start the CSS string with the opening <style> tag
     css = '<style>\n'
