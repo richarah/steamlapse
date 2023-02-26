@@ -198,11 +198,11 @@ def get_persona(player_data):
 def get_game(player_data):
     if not player_data['response']['players']:
         return "<offline>"
-    elif player_data['response']['players'][0]['personastate'] == 1:
-        return "<online>"
-    else:
+    elif 'gameextrainfo' in player_data['response']['players'][0]:
         return player_data['response']['players'][0]['gameextrainfo']
-
+    else:
+        return '<online>'
+    
 def append_csv_header(file_path):
     if not os.path.exists(file_path) or os.stat(file_path).st_size == 0:
         with open(file_path, 'a', newline='') as csv_file:
