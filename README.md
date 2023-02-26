@@ -2,15 +2,13 @@
 
 
 
-(Originally created as a practical joke for PVV NTNU)
+Originally created as a practical joke for PVV NTNU.
 
 
 
 #### What is this?
 
-Steamlapse is a Python project that assembles, collates and visualizes Steam activity data, creating a GitHub-like chart of user activity (read: procrastination).
-
-It uses the Steam API to gather timestamps and persona states for each user specified in a CSV file.
+Steamlapse is a Python project for visualising Steam activity data, creating a GitHub-like timelapse of user activity (read: procrastination).
 
 ## Prerequisites
 
@@ -37,7 +35,6 @@ There are three main Python scripts in the project:
 To use `collect.py`, navigate to the root directory of the project and run the following command:
 
 ```
-
 python collect.py
 ```
 
