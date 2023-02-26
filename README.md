@@ -20,7 +20,7 @@ To use Steamlapse, you will need to have Python 3 installed, in addition to Pill
 pip install -r requirements.txt
 ```
 
-You will also need to obtain a Steam API key and set it in a `.env` file in the root directory of the project:
+You will also need to [obtain a Steam API key](https://steamcommunity.com/dev/apikey) and set it in a `.env` file in the root directory of the project:
 
 ```
 STEAM_API_KEY=<your Steam API key>
