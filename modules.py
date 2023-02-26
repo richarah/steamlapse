@@ -24,7 +24,7 @@ def get_unique_strings(lists_of_strings):
     return unique_strings
 
 
-def generate_timeline(num_intervals=96):
+def generate_timeline(num_intervals=24):
 
     root = tk.Tk()
     root.withdraw()
