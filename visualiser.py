@@ -7,7 +7,7 @@ def generate_timeline():
     root = tk.Tk()
     root.withdraw()
 
-    file_path = filedialog.askopenfilename()
+    file_path = filedialog.askopenfilename(initialdir="./data")
 
     intervals_by_day = {}
 
