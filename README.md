@@ -2,7 +2,7 @@
 
 
 
-(Originally created as a practical joke for PVV NTNU)
+Originally created as a practical joke for PVV NTNU.
 
 
 
