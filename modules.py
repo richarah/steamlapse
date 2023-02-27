@@ -13,19 +13,6 @@ import hashlib
 import random
 from PIL import Image, ImageDraw
 
-# Web
-
-def create_html(html_string, html_path='chart.html'):
-    with open(html_path, 'w') as f:
-        f.write(html_string)
-        return f
-
-def display_html_in_browser(html_string: str):
-    f = create_html(html_string, "chart.html")
-    # Open the file in a web browser
-    webbrowser.open('file://' + os.path.abspath(f.name))
-
-
 # Timeline
 
 def get_unique_strings(lists_of_strings):
@@ -304,7 +291,7 @@ def html_legend(timeline):
     return '<table class="legend">{}</table>'.format(html)
 
 
-def generate_html(timeline: List[List[str]], name=None) -> str:
+def generate_html_chart(timeline: List[List[str]], name=None) -> str:
 
     # Generate internal stylesheet
     css = generate_css(len(timeline[0]))
@@ -408,3 +395,25 @@ def persona_from_path(filename):
 
 def id_from_path(filename):
     return split_filename(filename).group(2)
+
+
+def save_html_chart(path=None, use_defaults=True, intervals=24):
+    if not type(path) == str:
+        print("No path entered. Spawning file dialog.")
+        path = get_csv()
+    
+    if not use_defaults:
+        intervals = get_intervals()
+    else:
+        print("Using default intervals:", intervals)
+
+    persona = persona_from_path(path)
+    print("Generating chart for " + persona + "...")
+    html = generate_html_chart(generate_timeline(path, intervals), persona)
+    save_path = f"html/{persona}.html"
+
+    f = open(save_path, "w")
+    f.write(html)
+    f.close()
+    print("Saved to", save_path)
+    return save_path
