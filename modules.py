@@ -35,8 +35,7 @@ def get_unique_strings(lists_of_strings):
     return unique_strings
 
 def get_intervals(default=24):
-    user_input = input ("Intervals (default " + str(default) + "): ") or default
-    return int(user_input)
+    return int(input ("Intervals (default " + str(default) + "): ") or default)
 
 def generate_timeline(num_intervals=get_intervals()):
 
@@ -225,7 +224,13 @@ def generate_css(row_length=24) -> str:
     css = '<style>\n'
     
     # Wrapper div. Center the chart
-    css += f'.wrapper {{ white-space: nowrap; text-align: center; }}\n'
+    css += f'.wrapper {{ white-space: nowrap; text-align: left; margin-left: 20vw; }}\n'
+
+    # Legend
+    css += f'.legend {{ white-space: nowrap; text-align: left; }}\n'
+    css += f'.legend-text {{ font-family: Helvetica, sans-serif; font-size: {SQUARE_SIZE}; }}\n'
+    css += f'.legend .square {{ margin: 0; padding: 0; }}\n'
+    css += f'.legend tr {{ padding: {SQUARE_SPACING}; }}\n'
 
     # Add the CSS styles for the squares
     css += f'.square {{ border-style: solid; width: {SQUARE_SIZE}; height: {SQUARE_SIZE}; border-radius: {OUTLINE_RADIUS}; border-width: {OUTLINE_WIDTH}; margin: {SQUARE_SPACING}; padding: 0; display: inline-block; }}\n'
@@ -239,37 +244,66 @@ def generate_css(row_length=24) -> str:
     return css
 
 
-# Return a html string
-def generate_html(lists_of_strings: List[List[str]]) -> str:
+# HTML
+
+
+# Return a single html div representing a square
+def html_square(s):
+    if s is None:
+        # Add a square with a light red outline and no fill
+        return f'<div class="error square"></div>'
+    elif s == "<offline>":
+        # Add a square with a light gray outline and no fill
+        return f'<div class="offline square"></div>'
+    elif s == "<online>":
+        # Add a square with a dodger blue outline and no fill
+        return f'<div class="online square"></div>'
+    else:
+        # Convert the string to a color using the string_to_color function
+        # Also use a slightly dimmer tone for the outline
+        rgb_fill = string_to_rgb(s)
+        rgb_outline = dim_rgb(rgb_fill)
+        return f'<div class="square" style="background-color: rgb{rgb_fill}; border-color: rgb{rgb_outline};"></div>'
+
+
+
+# Returns legend div
+def html_legend(timeline):
+    # Unique strings from timeline
+    uniques = get_unique_strings(timeline)
+
+    # Special cases (WIP)
+    # special = dict("<online>" = "User online", "<offline>" = "User offline" None = "N/A")
+    # for case in special:
+
+    # Loop over the strings and draw each colored square
+    html = '<tr><td><text class="legend-text"><b>Legend</b></td></tr>'
+    for s in uniques:
+        html += f'<tr><td><text class="legend-text">{html_square(s)}</td><td>{s}</text></td></tr>'
+
+    # Wrap the HTML code in a div and return it
+    return '<table class="legend">{}</table>'.format(html)
+
+
+def generate_html(timeline: List[List[str]]) -> str:
 
     # Generate internal stylesheet
-    css = generate_css(len(lists_of_strings[0]))
+    css = generate_css(len(timeline[0]))
     
     # Start the HTML string
     html = f'<html><head><meta name="viewport" content="width=device-width, initial-scale=1">{css}</head><body><div class="wrapper">'
 
     # Loop over the lists of strings and add the squares to the HTML string
-    for row_idx, lst in enumerate(lists_of_strings):
+    for row_idx, lst in enumerate(timeline):
         for col_idx, s in enumerate(lst):
-            if s is None:
-                # Add a square with a light red outline and no fill
-                html += f'<div class="error square"></div>'
-            elif s == "<offline>":
-                # Add a square with a light gray outline and no fill
-                html += f'<div class="offline square"></div>'
-            elif s == "<online>":
-                # Add a square with a dodger blue outline and no fill
-                html += f'<div class="online square"></div>'
-            else:
-                # Convert the string to a color using the string_to_color function
-                # Also use a slightly dimmer tone for the outline
-                rgb_fill = string_to_rgb(s)
-                rgb_outline = dim_rgb(rgb_fill)
-                html += f'<div class="square" style="background-color: rgb{rgb_fill}; border-color: rgb{rgb_outline};"></div>'
+            html += html_square(s)
 
         # Add a line break between rows
         html += f'<br>'
         
+    # Legend
+    html += html_legend(timeline)
+
     # End HTML wrapper div
     html += "</div>"
 
