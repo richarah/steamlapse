@@ -37,12 +37,13 @@ def get_unique_strings(lists_of_strings):
 def get_intervals(default=24):
     return int(input ("Intervals (default " + str(default) + "): ") or default)
 
-def generate_timeline(num_intervals=get_intervals()):
-
+def get_csv():
     root = tk.Tk()
     root.withdraw()
-
     file_path = filedialog.askopenfilename(initialdir="./data")
+    return file_path
+
+def generate_timeline(file_path, num_intervals=24):
 
     intervals_by_day = {}
 
