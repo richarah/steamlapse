@@ -222,21 +222,27 @@ def generate_css(row_length=24) -> str:
     
     # Start the CSS string with the opening <style> tag
     css = '<style>\n'
-    
+
+    # Headings & text
+    css += f'h1, h2, h3, h4, h5, h6, p, text {{ font-family: Helvetica, sans-serif; }}\n'
+    css += f'h1, h2, h3, h4, h5, h6, p, text {{ font-family: Helvetica, sans-serif; }}\n'
+
     # Wrapper div. Center the chart
     css += f'.wrapper {{ white-space: nowrap; text-align: left; margin-left: 20vw; }}\n'
 
     # Legend
     css += f'.legend {{ white-space: nowrap; text-align: left; }}\n'
-    css += f'.legend-text {{ font-family: Helvetica, sans-serif; font-size: {SQUARE_SIZE}; }}\n'
-    css += f'.legend .square {{ margin: 0; padding: 0; }}\n'
     css += f'.legend tr {{ padding: {SQUARE_SPACING}; }}\n'
+    css += f'.legend text {{ font-size: {SQUARE_SIZE}; }}\n'
 
     # Add the CSS styles for the squares
     css += f'.square {{ border-style: solid; width: {SQUARE_SIZE}; height: {SQUARE_SIZE}; border-radius: {OUTLINE_RADIUS}; border-width: {OUTLINE_WIDTH}; margin: {SQUARE_SPACING}; padding: 0; display: inline-block; }}\n'
     css += f'.offline {{ border-color: rgb(192, 192, 192); }}\n'
     css += f'.online {{ border-color: rgb(30, 144, 255); }}\n'
     css += f'.error {{ border-color: rgb(255, 128, 128); }}\n'
+
+    # Special case: squares in legend div
+    css += f'.legend .square {{ margin: 0; padding: 0; }}\n'
 
     # Finish the CSS string with the closing </style> tag
     css += '</style>\n'
@@ -263,7 +269,7 @@ def html_square(s):
         # Also use a slightly dimmer tone for the outline
         rgb_fill = string_to_rgb(s)
         rgb_outline = dim_rgb(rgb_fill)
-        return f'<div class="square" style="background-color: rgb{rgb_fill}; border-color: rgb{rgb_outline};"></div>'
+        return f'<div class="game square" style="background-color: rgb{rgb_fill}; border-color: rgb{rgb_outline};"></div>'
 
 
 
@@ -271,27 +277,48 @@ def html_square(s):
 def html_legend(timeline):
     # Unique strings from timeline
     uniques = get_unique_strings(timeline)
-
-    # Special cases (WIP)
-    # special = dict("<online>" = "User online", "<offline>" = "User offline" None = "N/A")
-    # for case in special:
-
-    # Loop over the strings and draw each colored square
-    html = '<tr><td><text class="legend-text"><b>Legend</b></td></tr>'
+    
+    # Skip non-game squares
+    game_states = []
+    html = ''
     for s in uniques:
-        html += f'<tr><td><text class="legend-text">{html_square(s)}</td><td>{s}</text></td></tr>'
+        square = html_square(s)
+        if "game" in square:
+            game_states.append(s)
+
+    # Game states
+    html += '<tr><td><text><b>Game states</b></text></td></tr>'
+    for s in game_states:
+        print(s)
+        html += f'<tr><td>{html_square(s)}</td><td><text>{s}</text></td></tr>'
+    
+    # Special states
+    special_states ={"<offline>" : "Offline", "<online>" : "Online", None : "N/A"} 
+    html += '<tr><td><text><b>Persona states</b></text></td></tr>'
+    for k in special_states.keys():
+        v = special_states[k]
+        html += f'<tr><td>{html_square(v)}</td><td><text>{v}</text></td></tr>'
 
     # Wrap the HTML code in a div and return it
     return '<table class="legend">{}</table>'.format(html)
 
 
-def generate_html(timeline: List[List[str]]) -> str:
+def generate_html(timeline: List[List[str]], name=None) -> str:
 
     # Generate internal stylesheet
     css = generate_css(len(timeline[0]))
+
+    title = "Steamlapse"
+
+    # Different title if name is not set
+    if name is not None and type(name) == str:
+        title = (name+"'s Steamlapse")
     
     # Start the HTML string
-    html = f'<html><head><meta name="viewport" content="width=device-width, initial-scale=1">{css}</head><body><div class="wrapper">'
+    html = f'<html><head><meta name="viewport" content="width=device-width, initial-scale=1">{css}<title>{title}</title></head><body><div class="wrapper">'
+
+    html += f'<h1>{title}</h1>'
+
 
     # Loop over the lists of strings and add the squares to the HTML string
     for row_idx, lst in enumerate(timeline):
@@ -363,11 +390,19 @@ def append_csv_entry(file_path, player_data):
     with open(file_path, mode='a', newline='') as file:
         writer = csv.writer(file)
         writer.writerow([game, timestamp])
-        
-def id_from_path(filename):
+
+# Persona name and Steam ID from path
+def split_filename(filename):
     pattern = r"(.+)_([0-9]{17})\.csv"
     match = re.match(pattern, filename)
     if match:
-        return match.group(2)
+        return match
     else:
         return None
+
+# These are not used in the same program, hence this factoring
+def persona_from_path(filename):
+    return split_filename(filename).group(1)
+
+def id_from_path(filename):
+    return split_filename(filename).group(2)
