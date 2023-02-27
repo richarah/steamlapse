@@ -330,6 +330,7 @@ def generate_html(timeline: List[List[str]], name=None) -> str:
         html += f'<br>'
         
     # Legend
+    html += "<h2>Legend</h2>"
     html += html_legend(timeline)
 
     # End HTML wrapper div
@@ -403,7 +404,7 @@ def split_filename(filename):
 
 # These are not used in the same program, hence this factoring
 def persona_from_path(filename):
-    return split_filename(filename).group(1)
+    return os.path.basename(split_filename(filename).group(1))
 
 def id_from_path(filename):
     return split_filename(filename).group(2)
