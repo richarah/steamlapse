@@ -48,20 +48,24 @@ To use `add_csv.py`, navigate to the root directory of the project and run the f
 python add_csv.py
 ```
 
-### chart.py
+### create_html_chart.py
 
-**Please note:** This may be (mostly) phased out in the future in favour of html_chart.py when the latter is complete and stable.
+Generates and saves a HTML chart (with internal CSS) from a CSV. It may then be viewed with `view_html_chart.py` (see below)
 
-`chart.py` creates a timelapse of Steam activity for a specified Steam user. To use `chart.py`, navigate to the root directory of the project and run the following command:
+### view_html_chart.py
+
+Prompts for a HTML chart and displays it in the default web browser.
+
+### create_pil_chart.py (DEPRECATED)
+
+#### Please note
+
+`create_pil_chart.py` has been deprecated due to the inherent limitations of PIL/Pillow for this task. Please use `create_html_chart.py` instead.
+
+Creates a timelapse of Steam activity for a specified Steam user. To use `chart.py`, navigate to the root directory of the project and run the following command:
 
 ```
 python chart.py
 ```
 
 This will prompt for a CSV file, and create a Github-like timelapse of Steam activity for the user linked to that file.
-
-### html_chart.py
-
-**Please note: This is a work in progress!**
-
-Similar to `chart.py`, except generates a HTML page (with internal CSS) instead of a PIL image.
