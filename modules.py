@@ -285,7 +285,7 @@ def html_legend(timeline):
     html += '<tr><td><text><b>Persona states</b></text></td></tr>'
     for k in special_states.keys():
         v = special_states[k]
-        html += f'<tr><td>{html_square(v)}</td><td><text>{v}</text></td></tr>'
+        html += f'<tr><td>{html_square(k)}</td><td><text>{v}</text></td></tr>'
 
     # Wrap the HTML code in a div and return it
     return '<table class="legend">{}</table>'.format(html)
