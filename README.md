@@ -38,6 +38,10 @@ python collect.py
 
 This will periodically query the Steam API and update each CSV file in the `./data` directory with the latest Steam activity data.
 
+#### Note on running in background
+
+This script has a tendency to randomly disconnect when run in the background with e.g. `python3 collect.py &`. Thus, it is strongly advisable to use `screen`, `tmux` or similar for background operation instead.
+
 ### add_csv.py
 
 `add_csv.py` prompts for a 17-digit Steam ID and creates a CSV file linked to this ID, so `collect.py` can collect data for this Steam user.
