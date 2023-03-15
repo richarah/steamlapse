@@ -410,11 +410,11 @@ def save_html_chart(input_path="data/data.css", output_path=None, prompt=True, p
     # Persona can be set in function args for headless operations - if not set, generate from path
     if not persona:
         persona = persona_from_path(input_path)
-        print("Persona not set. Using", persona)
+        print("Persona option not set. Using", persona)
         
     if not output_path:
         output_path = f"html/{persona}.html"
-        print("Output path not set. Using", output_path)
+        print("Output path option not set. Using", output_path)
     
     print("Generating chart for " + persona + "...")
     html = generate_html_chart(generate_timeline(input_path, intervals), persona)
