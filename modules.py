@@ -397,25 +397,32 @@ def id_from_path(filename):
     return split_filename(filename).group(2)
 
 
-def save_html_chart(input_path=None, use_defaults=True, intervals=24):
-    if not type(input_path) == str:
-        print("No path entered. Spawning file dialog.")
-        input_path = get_csv()
+def save_html_chart(input_path="data/data.css", output_path=None, prompt=True, persona=None, intervals=24): 
     
-    if not use_defaults:
+    if prompt:
         intervals = get_intervals()
+        print("Spawning file dialog.")
+        input_path = get_csv()
     else:
         print("Using default intervals:", intervals)
-
-    persona = persona_from_path(input_path)
+        print("Using default input:", input_path)
+    
+    # Persona can be set in function args for headless operations - if not set, generate from path
+    if not persona:
+        persona = persona_from_path(input_path)
+        print("Persona not set. Using", persona)
+        
+    if not output_path:
+        output_path = f"html/{persona}.html"
+        print("Output path not set. Using", output_path)
+    
     print("Generating chart for " + persona + "...")
     html = generate_html_chart(generate_timeline(input_path, intervals), persona)
-    save_path = f"html/{persona}.html"
 
-    f = open(save_path, "w")
+    f = open(output_path, "w")
     f.write(html)
     f.close()
-    print("Saved to", save_path)
-    return save_path
+    print("Saved to", output_path)
+    return output_path
     
 
