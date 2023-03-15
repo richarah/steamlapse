@@ -397,7 +397,7 @@ def id_from_path(filename):
     return split_filename(filename).group(2)
 
 
-def save_html_chart(input_path="data/data.css", output_path=None, prompt=True, persona=None, intervals=24): 
+def save_html_chart(input_path="data/data.css", output_path=None, prompt=True, persona=None, intervals=24, in_place=False): 
     
     if prompt:
         intervals = get_intervals()
@@ -419,10 +419,14 @@ def save_html_chart(input_path="data/data.css", output_path=None, prompt=True, p
     print("Generating chart for " + persona + "...")
     html = generate_html_chart(generate_timeline(input_path, intervals), persona)
 
-    f = open(output_path, "w")
-    f.write(html)
-    f.close()
-    print("Saved to", output_path)
-    return output_path
+    # Return HTML as a string if in_place is enabled - else, return the output path
+    if in_place:
+        return html
+    else:
+        f = open(output_path, "w")
+        f.write(html)
+        f.close()
+        print("Saved to", output_path)
+        return output_path
     
 
